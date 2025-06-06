@@ -120,3 +120,36 @@ async def test_delete_school(client):
     # Confirmamos que ya no existe
     get_resp = await test_client.get(f"/schools/{school_id}")
     assert get_resp.status == 404
+
+@pytest.mark.asyncio
+async def test_enrich_school_success(client):
+    test_client = await client
+
+    # Creamos una escuela sin enriquecer
+    payload = {
+        "name": "colegio test",
+        "city": "Villahermosa"
+    }
+    create_resp = await test_client.post("/schools", json=payload)
+    school = await create_resp.json()
+    school_id = school["id"]
+
+    # Enriquecemos la escuela
+    enrich_resp = await test_client.post(f"/schools/{school_id}/enrich")
+    assert enrich_resp.status == 200
+
+    data = await enrich_resp.json()
+    enriched = data["school"]
+    assert enriched["name"] == "Colegio Test"
+    assert enriched["region"] == "Sur"
+
+@pytest.mark.asyncio
+async def test_enrich_school_not_found(client):
+    test_client = await client
+
+    # ID inexistente
+    enrich_resp = await test_client.post("/schools/999999/enrich")
+    assert enrich_resp.status == 404
+
+    data = await enrich_resp.json()
+    assert "error" in data

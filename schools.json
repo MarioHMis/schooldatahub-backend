@@ -18,5 +18,21 @@
     "id": 4,
     "name": "Tec de Villaherosa",
     "city": "Villaherosa"
+  },
+  {
+    "id": 5,
+    "name": "Escuela de Pruebas",
+    "city": "Testópolis"
+  },
+  {
+    "id": 6,
+    "name": "Escuela Actualizada",
+    "city": "Ciudad Original"
+  },
+  {
+    "id": 8,
+    "name": "Colegio Test",
+    "city": "Villahermosa",
+    "region": "Sur"
   }
 ]
