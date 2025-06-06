@@ -1,0 +1,5 @@
+[
+  { "id": 1, "name": "Escuela Nacional", "city": "CDMX" },
+  { "id": 2, "name": "Instituto del Sureste", "city": "Villahermosa" },
+  { "id": 3, "name": "Colegio Libre", "city": "Monterrey" }
+]
