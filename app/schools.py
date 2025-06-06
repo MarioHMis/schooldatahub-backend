@@ -51,3 +51,47 @@ async def get_school_by_id(request):
             return web.json_response(school)
 
     return web.json_response({"error": "School not found"}, status=404)
+
+
+async def update_school(request):
+    school_id = request.match_info.get("id")
+
+    if not school_id.isdigit():
+        return web.json_response({"error": "Invalid ID"}, status=400)
+
+    school_id = int(school_id)
+
+    for school in schools_db:
+        if school["id"] == school_id:
+            try:
+                data = await request.json()
+                name = data.get("name")
+                city = data.get("city")
+
+                if name:
+                    school["name"] = name
+                if city:
+                    school["city"] = city
+
+                return web.json_response(school)
+
+            except Exception as e:
+                return web.json_response({"error": str(e)}, status=500)
+
+    return web.json_response({"error": "School not found"}, status=404)
+
+
+async def delete_school(request):
+    school_id = request.match_info.get("id")
+
+    if not school_id.isdigit():
+        return web.json_response({"error": "Invalid ID"}, status=400)
+
+    school_id = int(school_id)
+
+    for index, school in enumerate(schools_db):
+        if school["id"] == school_id:
+            deleted = schools_db.pop(index)
+            return web.json_response({"message": "School deleted", "school": deleted})
+
+    return web.json_response({"error": "School not found"}, status=404)
