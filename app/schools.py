@@ -135,3 +135,27 @@ async def delete_school(request):
             return web.json_response({"message": "School deleted", "school": deleted})
 
     return web.json_response({"error": "School not found"}, status=404)
+
+
+async def enrich_school(request):
+    school_id = request.match_info.get("id")
+
+    if not school_id.isdigit():
+        return web.json_response({"error": "Invalid ID"}, status=400)
+
+    school_id = int(school_id)
+
+    for school in schools_db:
+        if school["id"] == school_id:
+            # Normalizar nombre
+            school["name"] = school["name"].title()
+
+            # Asignar región educativa basada en ciudad
+            city = school["city"].lower()
+            region = "Norte" if "monterrey" in city else "Centro" if "cdmx" in city else "Sur"
+            school["region"] = region
+
+            save_schools_to_file()
+            return web.json_response({"message": "Escuela enriquecida", "school": school})
+
+    return web.json_response({"error": "School not found"}, status=404)
